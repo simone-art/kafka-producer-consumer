@@ -18,6 +18,7 @@ public class NewOrder {
     //Adicionado o .get para fazer que o future do producer seja assincrona e espere pela resposta
     //que pode nao produzir a mensagem por problemas de execucao ou interrupcao
 
+      // Criado Kafka Producer
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         var producer = new KafkaProducer<String, String>(properties());
         var value = "12345, 76523, 300";
@@ -31,7 +32,7 @@ public class NewOrder {
         }).get();
     }
 
-    //criado método estático
+    //Criado Listener que vai escutar o tópico
     private static Properties properties() {
         var properties = new Properties();
         properties.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092");
