@@ -22,7 +22,13 @@ public class NewOrder {
         var producer = new KafkaProducer<String, String>(properties());
         var value = "12345, 76523, 300";
         var record = new ProducerRecord<String, String>("ECOMMERCE_NEW_ORDER", value, value );
-        producer.send(record).get();
+        producer.send(record, (data, ex)-> {
+            if(ex != null){
+                ex.printStackTrace();
+                return;
+            }
+            System.out.println("Sucesso enviando " + data.topic() + "::: partition " + data.partition() + "/offset " + data.offset() + "/timestamp" + data.timestamp());
+        }).get();
     }
 
     //criado método estático
