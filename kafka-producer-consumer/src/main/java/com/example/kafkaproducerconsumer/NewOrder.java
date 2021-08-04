@@ -7,6 +7,7 @@ import org.apache.kafka.common.serialization.StringSerializer;
 
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
 
 public class NewOrder {
 
@@ -14,11 +15,14 @@ public class NewOrder {
     //Mensagem que o producer vai enviar tem que ser gravada; Por isso se usa o record
     //Producer record usa também os parámetros de chave e valor
     // Na variável record vai ser definido o topic
-    public static void main(String[] args) {
+    //Adicionado o .get para fazer que o future do producer seja assincrona e espere pela resposta
+    //que pode nao produzir a mensagem por problemas de execucao ou interrupcao
+
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
         var producer = new KafkaProducer<String, String>(properties());
         var value = "12345, 76523, 300";
         var record = new ProducerRecord<String, String>("ECOMMERCE_NEW_ORDER", value, value );
-        producer.send(record);
+        producer.send(record).get();
     }
 
     //criado método estático
