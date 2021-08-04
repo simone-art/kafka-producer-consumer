@@ -5,6 +5,7 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.protocol.types.Field;
 import org.apache.kafka.common.serialization.StringDeserializer;
 
+import java.time.Duration;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Properties;
@@ -15,6 +16,7 @@ public class FraudeDetectorService {
     public static void main(String[] args) {
         var consumer = new KafkaConsumer<String, Field.Str>(properties());
         consumer.subscribe(Collections.singletonList("ECOMMERCE_NEW_ORDER"));
+        var records = consumer.poll(Duration.ofMillis(100));
     }
 
     //Criado Listener
