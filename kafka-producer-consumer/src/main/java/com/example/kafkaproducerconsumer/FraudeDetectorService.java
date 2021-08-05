@@ -18,27 +18,26 @@ public class FraudeDetectorService {
         consumer.subscribe(Collections.singletonList("ECOMMERCE_NEW_ORDER"));
         while(true) {
             var records = consumer.poll(Duration.ofMillis(100));
-            if (records.isEmpty()) {
-                System.out.println("Não tem registros");
-                continue;
-            }
-            for (var record : records) {
-                System.out.println("=========================================");
-                System.out.println("Processing New Order, checking for fraud");
-                System.out.println(record.key());
-                System.out.println(record.value());
-                System.out.println(record.partition());
-                System.out.println(record.offset());
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+            if (!records.isEmpty()) {
+                System.out.println("Encontrei " + records.count() + " registros");
+                for (var record : records) {
+                    System.out.println("=========================================");
+                    System.out.println("Processing New Order, checking for fraud");
+                    System.out.println(record.key());
+                    System.out.println(record.value());
+                    System.out.println(record.partition());
+                    System.out.println(record.offset());
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println("Order processed");
                 }
-                System.out.println("Order processed");
-
             }
         }
     }
+
 
     //Criado Listener
     private static Properties properties() {

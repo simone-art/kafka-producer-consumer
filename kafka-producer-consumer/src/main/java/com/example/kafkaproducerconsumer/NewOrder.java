@@ -21,7 +21,7 @@ public class NewOrder {
       // Criado Kafka Producer
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         var producer = new KafkaProducer<String, String>(properties());
-        var value = "12345, 76523, 300";
+        var value = "12345, 76523, 500";
         var record = new ProducerRecord<String, String>("ECOMMERCE_NEW_ORDER", value, value );
         producer.send(record, (data, ex)-> {
             if(ex != null){
