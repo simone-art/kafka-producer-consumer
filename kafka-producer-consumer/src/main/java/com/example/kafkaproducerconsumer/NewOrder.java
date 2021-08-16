@@ -1,5 +1,6 @@
 package com.example.kafkaproducerconsumer;
 
+import org.apache.kafka.clients.producer.Callback;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -23,13 +24,18 @@ public class NewOrder {
         var producer = new KafkaProducer<String, String>(properties());
         var value = "12345, 76523, 500";
         var record = new ProducerRecord<String, String>("ECOMMERCE_NEW_ORDER", value, value );
-        producer.send(record, (data, ex)-> {
-            if(ex != null){
+        Callback callback = (data, ex) -> {
+            if (ex != null) {
                 ex.printStackTrace();
                 return;
             }
             System.out.println("Sucesso enviando " + data.topic() + "::: partition " + data.partition() + "/offset " + data.offset() + "/timestamp" + data.timestamp());
-        }).get();
+        };
+        //Criar outro producer e refatorá-lo
+        var email = "Thank you for your order! We are processing your order";
+        var emailRecord = new ProducerRecord<>("ECOMMERCE SEND A EMAIL", email, email);
+        producer.send(record, callback).get();
+        producer.send(emailRecord, callback).get();
     }
 
     //Criado Listener que vai escutar o tópico
